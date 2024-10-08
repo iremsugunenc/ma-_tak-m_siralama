@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define GUNDEKI_MAX_MAC 8
+#define TOPLAM_MAC 380
+#define TAKIM_SAYISI 20
+
+struct Mac {
+    char* ev_sahibi;
+    char* misafir;
+    int gun;
+    int ay;
+    int yil;
+    float saat;
+};
+
+char *Takimlar[TAKIM_SAYISI] = {
+    "Takim1", "Takim2", "Takim3", "Takim4",
+    "Takim5", "Takim6", "Takim7", "Takim8",
+    "Takim9", "Takim10", "Takim11", "Takim12",
+    "Takim13", "Takim14", "Takim15", "Takim16",
+    "Takim17", "Takim18", "Takim19", "Takim20"
+};
+
+int main() {
+    struct Mac maclar[TOPLAM_MAC];
+    int mac_sayisi = 0;
+    int gun = 1;
+    int ay = 1;
+    int yil = 2024;
+    float saat = 12.00;
+
+    for (int i = 0; i < TAKIM_SAYISI - 1; i++) {
+        for (int j = i + 1; j < TAKIM_SAYISI; j++) {
+            if (mac_sayisi < TOPLAM_MAC) {
+                maclar[mac_sayisi].ev_sahibi = Takimlar[i];
+                maclar[mac_sayisi].misafir = Takimlar[j];
+                maclar[mac_sayisi].gun = gun;
+                maclar[mac_sayisi].ay = ay;
+                maclar[mac_sayisi].yil = yil;
+                maclar[mac_sayisi].saat = saat;
+                mac_sayisi++;
+
+                maclar[mac_sayisi].ev_sahibi = Takimlar[j];
+                maclar[mac_sayisi].misafir = Takimlar[i];
+                maclar[mac_sayisi].gun = gun;
+                maclar[mac_sayisi].ay = ay;
+                maclar[mac_sayisi].yil = yil;
+                maclar[mac_sayisi].saat = saat;
+                mac_sayisi++;
+            }
+
+            saat += 3;
+            if (saat >= 24.00) {
+                saat = 0.00;
+                gun++;
+                if (gun > 30) {
+                    gun = 1;
+                    ay++;
+                    if (ay > 12) {
+                        ay = 1;
+                        yil++;
+                    }
+                }
+            }
+
+            if (mac_sayisi % GUNDEKI_MAX_MAC == 0) {
+                gun++;
+                saat = 00.00;
+            }
+        }
+    }
+
+    for (int i = 0; i < mac_sayisi; i++) {
+        printf("MAC %d: %s vs %s  %02d/%02d/%d %02.f:00\n",
+            i + 1, maclar[i].ev_sahibi, maclar[i].misafir,
+            maclar[i].gun, maclar[i].ay, maclar[i].yil, maclar[i].saat);
+    }
+
+    return 0;
+}
